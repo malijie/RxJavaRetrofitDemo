@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Subscriber<MovieInfo> subscriber = new Subscriber<MovieInfo>() {
+                Subscriber<List<MovieInfo>> subscriber = new Subscriber<List<MovieInfo>>() {
                     @Override
                     public void onCompleted() {
 
@@ -49,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onNext(MovieInfo movieInfo) {
-                        mTextView.setText(movieInfo.getQuestion());
+                    public void onNext(List<MovieInfo> movieInfos) {
+                        mTextView.setText(movieInfos.get(0).getQuestion());
+
                     }
                 };
                 RetrofitHttpRequest.getInstance().getMovieInfo(1,"c1", URLContainer.APP_KEY,"rand",subscriber);

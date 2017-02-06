@@ -45,20 +45,12 @@ public class RetrofitHttpRequest {
         return sInstance;
     }
 
-    public void getMovieInfo(int subject, String model, String appKey, String type, Subscriber<MovieInfo> subscriber){
-        Observable<HttpResult<List<MovieInfo>>> call = mRetrofitService.getMovieInfo(subject,model,appKey,type);
-        call.subscribeOn(Schedulers.io())
+    public void getMovieInfo(int subject, String model, String appKey, String type, Subscriber<List<MovieInfo>> subscriber){
+        mRetrofitService.getMovieInfo(subject,model,appKey,type)
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<HttpResult<List<MovieInfo>>>() {
-                    @Override
-                    public void call(HttpResult<List<MovieInfo>> httpResult) {
-                        if(httpResult.getError_code().equals("0")){
-                            subscriber.onNext(httpResult.getResult().get(0));
-                        }else{
-                            subscriber.onError(new ApiException("api访问出现问题"));
-                        }
-                    }
-                });
+                .map(new HttpResultFunc<List<MovieInfo>>())
+                .subscribe(subscriber);
     }
 
 }
