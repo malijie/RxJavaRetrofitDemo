@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.vic.demo.R;
+import com.vic.demo.bean.MovieInfo;
 import com.vic.demo.http.RetrofitHttpRequest;
 import com.vic.demo.http.URLContainer;
 
@@ -25,16 +26,34 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
     private Button mButton =null;
     private List<String> list = null;
+    private TextView mTextView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mButton = (Button) findViewById(R.id.button);
+        mTextView = (TextView) findViewById(R.id.tv);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RetrofitHttpRequest.getInstance().getMovieInfo(1,"c1", URLContainer.APP_KEY,"rand");
+                Subscriber<MovieInfo> subscriber = new Subscriber<MovieInfo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(MovieInfo movieInfo) {
+                        mTextView.setText(movieInfo.getQuestion());
+                    }
+                };
+                RetrofitHttpRequest.getInstance().getMovieInfo(1,"c1", URLContainer.APP_KEY,"rand",subscriber);
 
             }
         });

@@ -2,17 +2,15 @@ package com.vic.demo.http;
 
 import android.util.Log;
 
-import com.vic.demo.bean.MovieInfoResult;
+import com.vic.demo.bean.MovieInfo;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.List;
+
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Query;
 import rx.Observable;
-import rx.Scheduler;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -47,34 +45,20 @@ public class RetrofitHttpRequest {
         return sInstance;
     }
 
-    public void getMovieInfo(int subject,String model,String appKey,String type){
-        Observable<MovieInfoResult> call = mRetrofitService.getMovieInfo(subject,model,appKey,type);
+    public void getMovieInfo(int subject, String model, String appKey, String type, Subscriber<MovieInfo> subscriber){
+        Observable<HttpResult<List<MovieInfo>>> call = mRetrofitService.getMovieInfo(subject,model,appKey,type);
         call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<MovieInfoResult>() {
+                .subscribe(new Action1<HttpResult<List<MovieInfo>>>() {
                     @Override
-                    public void call(MovieInfoResult movieInfoResult) {
-                        Log.d("MLJ","movieInfoResult Reason=" + movieInfoResult.getReason());
+                    public void call(HttpResult<List<MovieInfo>> httpResult) {
+                        if(httpResult.getError_code().equals("0")){
+                            subscriber.onNext(httpResult.getResult().get(0));
+                        }else{
+                            subscriber.onError(new ApiException("api访问出现问题"));
+                        }
                     }
                 });
-//        call.enqueue(new Callback<MovieInfoResult>() {
-//            @Override
-//            public void onResponse(Call<MovieInfoResult> call, Response<MovieInfoResult> response) {
-//                Log.d("MLJ","response===" + response.body());
-//                for(int i=0;i<response.body().getResult().size();i++){
-//                    Log.d("MLJ","bean===" + i + "===" +response.body().getResult().get(i).getQuestion() );
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<MovieInfoResult> call, Throwable t) {
-//                Log.d("MLJ","onFailure" );
-//
-//            }
-//        });
-
     }
 
 }

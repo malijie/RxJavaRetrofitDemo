@@ -1,8 +1,9 @@
 package com.vic.demo.http;
 
-import com.vic.demo.bean.MovieInfoResult;
+import com.vic.demo.bean.MovieInfo;
 
-import retrofit2.Call;
+import java.util.List;
+
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -14,6 +15,6 @@ import rx.Observable;
 public interface RetrofitService {
 
     @POST("jztk/query")
-    Observable<MovieInfoResult> getMovieInfo(@Query("subject") int subject, @Query("model") String model, @Query("key") String appKey, @Query("testType") String type);
+    Observable<HttpResult<List<MovieInfo>>> getMovieInfo(@Query("subject") int subject, @Query("model") String model, @Query("key") String appKey, @Query("testType") String type);
 
 }
