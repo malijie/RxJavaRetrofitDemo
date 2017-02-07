@@ -1,7 +1,5 @@
 package com.vic.demo.http;
 
-import android.util.Log;
-
 import com.vic.demo.bean.MovieInfo;
 
 import java.util.List;
@@ -9,10 +7,9 @@ import java.util.List;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -51,6 +48,10 @@ public class RetrofitHttpRequest {
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(new HttpResultFunc<List<MovieInfo>>())
                 .subscribe(subscriber);
+
+
     }
+
+
 
 }

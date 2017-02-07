@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mButton =null;
     private List<String> list = null;
     private TextView mTextView = null;
+    private Subscriber<List<MovieInfo>> mSubscriber = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Subscriber<List<MovieInfo>> subscriber = new Subscriber<List<MovieInfo>>() {
+                mSubscriber = new Subscriber<List<MovieInfo>>() {
                     @Override
                     public void onCompleted() {
 
@@ -54,11 +55,17 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 };
-                RetrofitHttpRequest.getInstance().getMovieInfo(1,"c1", URLContainer.APP_KEY,"rand",subscriber);
+                RetrofitHttpRequest.getInstance().getMovieInfo(1,"c1", URLContainer.APP_KEY,"rand",mSubscriber);
 
             }
         });
      }
 
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mSubscriber != null && !mSubscriber.isUnsubscribed()){
+            mSubscriber.unsubscribe();
+        }
+    }
 }
