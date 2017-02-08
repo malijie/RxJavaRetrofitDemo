@@ -1,6 +1,6 @@
 package com.vic.demo.http;
 
-import com.vic.demo.bean.MovieInfo;
+import com.vic.demo.bean.QuestionInfo;
 
 import java.util.List;
 
@@ -8,7 +8,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Subscriber;
-import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -42,11 +41,11 @@ public class RetrofitHttpRequest {
         return sInstance;
     }
 
-    public void getMovieInfo(int subject, String model, String appKey, String type, Subscriber<List<MovieInfo>> subscriber){
+    public void getMovieInfo(int subject, String model, String appKey, String type, Subscriber<List<QuestionInfo>> subscriber){
         mRetrofitService.getMovieInfo(subject,model,appKey,type)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .map(new HttpResultFunc<List<MovieInfo>>())
+                .map(new HttpResultFunc<List<QuestionInfo>>())
                 .subscribe(subscriber);
 
 

@@ -6,7 +6,7 @@ import java.util.List;
  * Created by malijie on 2017/2/6.
  */
 
-public class MovieInfo {
+public class QuestionInfo {
     private String id;
     private String question;
     private String answer;
