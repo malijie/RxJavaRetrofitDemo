@@ -7,6 +7,8 @@ import java.util.List;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -42,15 +44,15 @@ public class RetrofitHttpRequest {
     }
 
     public void getMovieInfo(int subject, String model, String appKey, String type, Subscriber<List<QuestionInfo>> subscriber){
-        mRetrofitService.getMovieInfo(subject,model,appKey,type)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .map(new HttpResultFunc<List<QuestionInfo>>())
-                .subscribe(subscriber);
-
-
+        Observable observable = mRetrofitService.getMovieInfo(subject,model,appKey,type)
+                                .map(new HttpResultFunc<List<QuestionInfo>>());
+        toSubscribe(observable,subscriber);
     }
 
-
+    private void toSubscribe(Observable observable,Subscriber subscriber){
+        observable.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(subscriber);
+    }
 
 }
